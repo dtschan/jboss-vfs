@@ -237,7 +237,6 @@ class CertificateReaderInputStream extends InputStream
    public void close() throws IOException
    {
       streamClosed(true);
-      super.close();
    }
 
    /**

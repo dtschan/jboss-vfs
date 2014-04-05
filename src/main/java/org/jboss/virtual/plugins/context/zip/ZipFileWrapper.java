@@ -75,6 +75,9 @@ class ZipFileWrapper extends ZipWrapper
    /** true if noReaper mode is forced on a per-instance basis */
    private boolean noReaperOverride;
 
+   /** ZipEntrycontext that owns us */
+   private ZipEntryContext ctx;
+
    /**
     * ZipFileWrapper
     *
@@ -82,8 +85,9 @@ class ZipFileWrapper extends ZipWrapper
     * @param autoClean  should archive be deleted after use
     * @param noReaperOverride flag to specify if reaper be used or not
     */
-   ZipFileWrapper(File archive, boolean autoClean, boolean noReaperOverride)
+   ZipFileWrapper(ZipEntryContext ctx, File archive, boolean autoClean, boolean noReaperOverride)
    {
+      this.ctx = ctx;
       this.noReaperOverride = noReaperOverride;
       init(archive, autoClean);
    }
@@ -191,7 +195,15 @@ class ZipFileWrapper extends ZipWrapper
          zipFile = null;
          zf.close();
          if (forceNoReaper == false && noReaperOverride == false)
+         {
             ZipFileLockReaper.getInstance().unregister(this);
+
+            // reset owner context
+            if (ctx != null)
+            {
+               ctx.resetInitStatus();
+            }
+         }
       }
    }
 

@@ -369,7 +369,7 @@ public class ZipEntryContext extends AbstractVFSContext
          boolean noReaper = aggregatedOptions.getBooleanOption(VFSUtils.NO_REAPER_QUERY);
          realURL = urlInfo.toURL();
          boolean isAutoClean = autoClean || aggregatedOptions.getBooleanOption(VFSUtils.IS_TEMP_FILE);
-         return new ZipFileWrapper(file, isAutoClean, noReaper);
+         return new ZipFileWrapper(this, file, isAutoClean, noReaper);
       }
    }
 
@@ -652,6 +652,7 @@ public class ZipEntryContext extends AbstractVFSContext
       if (initStatus != InitializationStatus.NOT_INITIALIZED)
       {
          ZipEntryContextInfo rootInfo = entries.get("");
+         rootInfo.clearChildren();
          entries.clear();
          entries.put("", rootInfo);
 
